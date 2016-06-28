@@ -1,4 +1,4 @@
-package swtcc.custom.swt.widgets;
+package custom.swt.widgets;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;

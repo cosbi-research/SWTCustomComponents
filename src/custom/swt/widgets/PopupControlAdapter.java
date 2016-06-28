@@ -1,4 +1,4 @@
-package swtcc.custom.swt.widgets;
+package custom.swt.widgets;
 
 //import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.preference.JFacePreferences;

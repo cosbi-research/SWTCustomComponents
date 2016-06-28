@@ -1,4 +1,4 @@
-package swtcc.custom.swt.widgets;
+package custom.swt.widgets;
 
 /*******************************************************************************
  * Copyright (c) 2005, 2010 IBM Corporation and others.

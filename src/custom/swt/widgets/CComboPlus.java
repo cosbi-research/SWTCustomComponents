@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package swtcc.custom.swt.widgets;
+package custom.swt.widgets;
 
 /*
  * This class file is modified version of the org.eclipse.swt.custom.CCombo class by Petros Moyseos
@@ -68,7 +68,7 @@ public class CComboPlus extends Composite {
 	Font font;
 	Shell _shell;
 	
-	static final String PACKAGE_PREFIX = "swtcc.custom.swt.widgets."; //$NON-NLS-1$
+	static final String PACKAGE_PREFIX = "custom.swt.widgets."; //$NON-NLS-1$
 
 /**
  * Constructs a new instance of this class given its parent

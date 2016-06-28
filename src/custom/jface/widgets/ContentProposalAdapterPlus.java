@@ -14,7 +14,7 @@
  * This class file has been derived from ContentProposalAdapter and modified by Petros Moyseos
  */
 
-package swtcc.custom.jface.widgets;
+package custom.jface.widgets;
 
 import java.util.ArrayList;
 

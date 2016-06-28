@@ -1,4 +1,4 @@
-package swtcc.custom.jface.widgets;
+package custom.jface.widgets;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;

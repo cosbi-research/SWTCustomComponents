@@ -1,4 +1,4 @@
-package swtcc.custom.swt.widgets;
+package custom.swt.widgets;
 
 public class MinMaxValidatorExample implements IPopupLinkInputValidator {
 
