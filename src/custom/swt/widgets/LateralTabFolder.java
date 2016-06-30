@@ -22,7 +22,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -54,7 +53,7 @@ public class LateralTabFolder extends Composite {
 	private static int heightTabs = 32;
 	private PaintListener paintRect, paintLinesUp, paintLinesRight, paintLinesDown, paintLinesCompTabs, paintTabModified;
 	private Rectangle rect;
-	private Color colorLines = Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+	private Color colorLines = getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
 	private int counter = 0;
 	private int selectedTabId;
 	private int xMargin = 20;
@@ -167,7 +166,7 @@ public class LateralTabFolder extends Composite {
 		});
 		
 		rect = new Rectangle(6,0,widthCompAlg,0);
-		activeTabBtnColor = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+		activeTabBtnColor = getDisplay().getSystemColor(SWT.COLOR_WHITE);
 		
 		tabListener = new Listener() {
 
@@ -186,8 +185,8 @@ public class LateralTabFolder extends Composite {
 			public void paintControl(PaintEvent e) {
 					GC gc=e.gc;
 				 	gc.setLineWidth(0);
-				 	gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-				 	gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+				 	gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_RED));
+				 	gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_RED));
 				 	int xRect = 2;
 				 	int yRect = 1;
 				 	int endRect = 4;
@@ -310,10 +309,10 @@ public class LateralTabFolder extends Composite {
 			compTabs.getChildren()[selectedTabId+1].redraw();
 		}
 		CLabel tabLabel = (CLabel) prevTabBtn.getChildren()[0];
-		tabLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		tabLabel.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		FontData fontDatas[] = tabLabel.getFont().getFontData();
 		FontData data = fontDatas[0];
-		Font font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.NORMAL);
+		Font font = new Font(getDisplay(), data.getName(), data.getHeight(), SWT.NORMAL);
 		
 		//Set tab inactive image
 		if(tabImagesMap.containsKey(selectedTabId))
@@ -331,7 +330,7 @@ public class LateralTabFolder extends Composite {
 		tabBtn.redraw();
 
 		tabLabel = (CLabel) tabBtn.getChildren()[0];
-		tabLabel.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		tabLabel.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		
 		//Set tab hot image
 		if(tabHotImagesMap.containsKey(selectedTabId)){
@@ -339,7 +338,7 @@ public class LateralTabFolder extends Composite {
 		}
 		
 		data = tabLabel.getFont().getFontData()[0];
-		font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
+		font = new Font(getDisplay(), data.getName(), data.getHeight(), SWT.BOLD);
 		tabLabel.setFont(font);		
 		
 		tabLabel.pack();
@@ -461,7 +460,7 @@ public class LateralTabFolder extends Composite {
 		if(tabContent == null)
 			SWT.error (SWT.ERROR_NULL_ARGUMENT);
 		
-		tabContent.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+		tabContent.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		
 		//Create a new composite for the tab button
 		Composite tabBtn =  new Composite(compTabs, SWT.NONE);
@@ -504,7 +503,7 @@ public class LateralTabFolder extends Composite {
 		gl_hostComp.marginHeight = 0;
 		hostComp.setLayout(gl_hostComp);
 		
-		Color headerColor = new Color(Display.getCurrent(), new RGB(198,225,253));
+		Color headerColor = new Color(getDisplay(), new RGB(198,225,253));
 		
 		Composite header = new Composite(hostComp, SWT.NONE);
 		GridData gd_header = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
@@ -516,12 +515,12 @@ public class LateralTabFolder extends Composite {
 		CLabel lblTitle = new CLabel(header, SWT.LEFT);
 		lblTitle.setBackground(new Color[] {
 				headerColor,
-				Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),},  new int[] {100});
+				getDisplay().getSystemColor(SWT.COLOR_WHITE),},  new int[] {100});
 
 		// this sets the bold font for the title label
 		lblTitle.setLeftMargin(xMargin);
 		FontData data = lblTitle.getFont().getFontData()[0];
-		Font font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
+		Font font = new Font(getDisplay(), data.getName(), data.getHeight(), SWT.BOLD);
 		lblTitle.setFont(font);		
 		lblTitle.setText(tabHeader);
 		
@@ -543,7 +542,7 @@ public class LateralTabFolder extends Composite {
 		gl_contents.marginWidth = 0;
 		contents.setLayout(gl_contents);
 		contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		contents.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GREEN));
+		contents.setBackground(getDisplay().getSystemColor(SWT.COLOR_GREEN));
 		
 		//Set parent
 		tabContent.setParent(contents);
@@ -555,10 +554,10 @@ public class LateralTabFolder extends Composite {
 		
 		if(compContents.keySet().size() == 1){
 			selectedTabId = counter;
-			lblTabName.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+			lblTabName.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
 			
 			data = lblTabName.getFont().getFontData()[0];
-			font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
+			font = new Font(getDisplay(), data.getName(), data.getHeight(), SWT.BOLD);
 			
 			//Set hot image
 			if(tabHotImagesMap.containsKey(selectedTabId))

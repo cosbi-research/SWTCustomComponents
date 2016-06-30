@@ -1,6 +1,7 @@
 package custom.swt.widgets;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
@@ -9,7 +10,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
@@ -30,6 +30,10 @@ import org.eclipse.swt.widgets.Listener;
  * <p>
  * IMPORTANT: This class is <em>not</em> intended to be sub-classed.
  * </p>
+ * 
+ * <dt><b>Styles:</b>
+ * <dd>(none)</dd>
+ * </dl>
  *
  */
 public class PopupLink extends Composite {
@@ -41,13 +45,36 @@ public class PopupLink extends Composite {
 	private String connection;
 	private IPopupLinkInputValidator[] validators;
 	
+	/**
+	 * Constructs a new instance of this class given its parent
+	 * and a style value describing its behavior and appearance.
+	 * <p>
+	 * The style value is either one of the style constants defined in
+	 * class <code>SWT</code> which is applicable to instances of this
+	 * class, or must be built by <em>bitwise OR</em>'ing together 
+	 * (that is, using the <code>int</code> "|" operator) two or more
+	 * of those <code>SWT</code> style constants. The class description
+	 * lists the style constants that are applicable to the class.
+	 * Style bits are also inherited from superclasses.
+	 * </p>
+	 *
+	 * @param parent a widget which will be the parent of the new instance (cannot be null)
+	 * @param style the style of widget to construct
+	 *
+	 * @exception IllegalArgumentException <ul>
+	 *    <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+	 * </ul>
+	 * @exception SWTException <ul>
+	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the parent</li>
+	 * </ul>
+	 */
 	public PopupLink(Composite parent, int style){
 		super(parent, style);
 		
 		selItemIndex = 0;
 		
 		link = new Link(this, SWT.NONE);
-		link.setCursor(new Cursor(Display.getCurrent(), SWT.CURSOR_HAND));
+		link.setCursor(new Cursor(getDisplay(), SWT.CURSOR_HAND));
 		
 		setLayout(new OurLayout());
 		
@@ -77,47 +104,78 @@ public class PopupLink extends Composite {
 	    });
 	}
 	
+	
+	/**
+	 * @return the text displayed in the text field of the popup link
+	 */
 	public String getText() {
 		return text;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	/**
+	 * @param value - the text to be displayed in the text field of the popup link
+	 */
+	public void setTextFieldValue(String value) {
+		this.text = value;
 		updateLinkText();
 	}
-
+	
+	/**
+	 * @return the options for the dropdown list of the popup link
+	 */
+	public String[] getDropdownOptions() {
+		System.out.println("in-------------------------");
+		return items;
+	}
+	
+	/**
+	 * @param options - the dropdown list options of the popup link
+	 */
+	public void setDropdownOptions(String [] options){
+		this.items = options;
+		updateLinkText();
+	}
+	
+	/**
+	 * @return the index of the selected option
+	 */
 	public int getSelectionIndex() {
 		return selItemIndex;
 	}
 
+	/**
+	 * @param selItemIndex - the index of the option to appear as selected
+	 */
 	public void setSelection(int selItemIndex) {
 		this.selItemIndex = selItemIndex;
 		updateLinkText();
 	}
 
-	public String[] getItems() {
-		return items;
-	}
-	
-	public void setItems(String [] items){
-		this.items = items;
-		updateLinkText();
-	}
-	
+	/**
+	 * @return the selected option's text
+	 */
 	public String getSelectionText(){
 		return items[selItemIndex];
 	}
 	
+	/**
+	 * @param connection - a string to used as connection between the textfield value and the selected option
+	 * e.g. 10 per sec
+	 */
 	public void setConnectionText(String connection){
 		this.connection = connection;
 		updateLinkText();
 	}
 	
-	public Link getLink(){
+	protected Link getLink(){
 		return link;
 	}
 	
-	public void updateLinkText(){
+	/**
+	 * Updated the text displayed by the link taking which is the combindation of the text field value (if any) and the 
+	 * selected option from the dropdown list (if any)
+	 */
+	private void updateLinkText(){
 		
 		String linkText = "";
 		
@@ -137,46 +195,81 @@ public class PopupLink extends Composite {
 		//super.setFocus(); // In order to hide the dotted border
 	}
 	
+	/**
+	 * @return the list of {@link IPopupLinkInputValidator} objects that are used for validating
+	 * the user input
+	 */
 	public IPopupLinkInputValidator[] getValidators() {
 		return validators;
 	}
 
+	/**
+	 * @param validators - a list of {@link IPopupLinkInputValidator} objects to be used for validating
+	 * user input
+	 */
 	public void setValidators(IPopupLinkInputValidator[] validators) {
 		this.validators = validators;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//Forward methods to link
+	//Forward basic methods to link
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Control#setBackground(org.eclipse.swt.graphics.Color)
+	 */
+	@Override
 	public void setBackground(Color c){
 		super.setBackground(c);
 		link.setBackground(c);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Control#setForeground(org.eclipse.swt.graphics.Color)
+	 */
+	@Override
 	public void setForeground(Color c){
 		super.setForeground(c);
 		link.setForeground(c);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Control#setEnabled(boolean)
+	 */
+	@Override
 	public void setEnabled(boolean b){
 		super.setEnabled(b);
 		link.setEnabled(b);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Control#setToolTipText(java.lang.String)
+	 */
+	@Override
 	public void setToolTipText(String text){
 		super.setToolTipText(text);
 		link.setToolTipText(text);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Control#setCursor(org.eclipse.swt.graphics.Cursor)
+	 */
+	@Override
 	public void setCursor(Cursor cursor){
 		super.setCursor(cursor);
 		link.setCursor(cursor);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.swt.widgets.Control#setFont(org.eclipse.swt.graphics.Font)
+	 */
+	@Override
 	public void setFont(Font font){
 		super.setFont(font);
 		link.setFont(font);
 	}
+	
+	/////////////////////////////////////////////////////////////////////////////
+	// Private Layout class for this custom component 
 	
 	private class OurLayout extends Layout {
 		Point tExtent; // the cached sizes
@@ -203,5 +296,4 @@ public class PopupLink extends Composite {
 			children[0].setBounds(1, 1, tExtent.x, tExtent.y);
 		}
 	}
-	
 }

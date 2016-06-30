@@ -1,10 +1,8 @@
 package custom.swt.widgets;
 
-//import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-//import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -69,7 +67,7 @@ public class PopupControlAdapter {
 		selPopupLink = link;
 		controlLink = link.getLink();
 		textValue = link.getText();
-		items = link.getItems();
+		items = link.getDropdownOptions();
 		selectedItemIndex = link.getSelectionIndex();
 		
 		//Determine popup type
@@ -263,10 +261,10 @@ public class PopupControlAdapter {
 			if (updateElemFlag) {
 				
 				if(popupType == PopupControlAdapter.TYPE_TEXT_DROPDOWN){
-					selPopupLink.setText(textVal);
+					selPopupLink.setTextFieldValue(textVal);
 					selPopupLink.setSelection(itemSelIndex);
 				}else if(popupType == PopupControlAdapter.TYPE_TEXT){
-					selPopupLink.setText(textVal);
+					selPopupLink.setTextFieldValue(textVal);
 				}else if(popupType == PopupControlAdapter.TYPE_DROPDOWN){
 					selPopupLink.setSelection(itemSelIndex);
 				}
@@ -409,7 +407,7 @@ public class PopupControlAdapter {
 			//Add the CComboPlus control
 			if (popupType != PopupControlAdapter.TYPE_TEXT) {
 				comboCtrl = new CComboPlus(popupContent, SWT.READ_ONLY | SWT.FLAT | SWT.BORDER);
-				comboCtrl.setItems(selPopupLink.getItems());
+				comboCtrl.setItems(selPopupLink.getDropdownOptions());
 				
 				GridData gl_combo;
 				
@@ -460,7 +458,7 @@ public class PopupControlAdapter {
 						for(IPopupLinkInputValidator v : selPopupLink.getValidators()){
 							
 							if (popupType == PopupControlAdapter.TYPE_TEXT_DROPDOWN)
-								message = v.validateInput(value, selPopupLink.getItems(), comboCtrl.getSelectionIndex());
+								message = v.validateInput(value, selPopupLink.getDropdownOptions(), comboCtrl.getSelectionIndex());
 							else
 								message = v.validateInput(value, null, -1);
 							
@@ -527,7 +525,7 @@ public class PopupControlAdapter {
 								for(IPopupLinkInputValidator v : selPopupLink.getValidators()){
 									
 									if (popupType == PopupControlAdapter.TYPE_TEXT_DROPDOWN)
-										message = v.validateInput(value, selPopupLink.getItems(), comboCtrl.getSelectionIndex());
+										message = v.validateInput(value, selPopupLink.getDropdownOptions(), comboCtrl.getSelectionIndex());
 									else
 										message = v.validateInput(value, null, -1);
 									
