@@ -124,7 +124,6 @@ public class PopupLink extends Composite {
 	 * @return the options for the dropdown list of the popup link
 	 */
 	public String[] getDropdownOptions() {
-		System.out.println("in-------------------------");
 		return items;
 	}
 	

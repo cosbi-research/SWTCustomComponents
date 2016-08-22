@@ -52,7 +52,6 @@ public class PopupControlAdapter {
 	
 	protected PopupControlAdapter() {
 		// Exists only to defeat instantiation.
-		tooltip = new ToolTip(Display.getDefault().getActiveShell(), SWT.BALLOON | SWT.ICON_WARNING);
 	}
 
 	public static PopupControlAdapter getInstance() {
@@ -79,6 +78,10 @@ public class PopupControlAdapter {
 				popupType = PopupControlAdapter.TYPE_TEXT;
 		}else
 			popupType = PopupControlAdapter.TYPE_DROPDOWN;
+		
+		
+		if(tooltip == null)
+			tooltip = new ToolTip(Display.getDefault().getActiveShell(), SWT.BALLOON | SWT.ICON_WARNING);
 		
 		openPopupControl();
 	}
