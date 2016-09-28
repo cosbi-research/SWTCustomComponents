@@ -10,6 +10,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
@@ -20,10 +21,12 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
@@ -45,7 +48,12 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class LateralTabFolder extends Composite {
 
+	public enum WIDGET_TYPES{
+		BUTTON, LINK
+	}
+	
 	private Composite compTabs;
+	private Composite compTabsLinks;
 	private Composite container;
 	private HashMap<Integer,Composite> compContents;
 	private StackLayout containerLayout;
@@ -132,17 +140,39 @@ public class LateralTabFolder extends Composite {
 		gl_composite.horizontalSpacing = 0;
 		this.setLayout(gl_composite);
 		
-		compTabs = new Composite(this, SWT.NONE);
+		Composite tabsHost = new Composite(this, SWT.NONE);
 		GridLayout gl_compTabs = new GridLayout(1, false);
 		gl_compTabs.marginWidth = 0;
 		gl_compTabs.marginHeight = 0;
 		gl_compTabs.horizontalSpacing = 0;
 		gl_compTabs.verticalSpacing = 1;
-		compTabs.setLayout(gl_compTabs);
+		tabsHost.setLayout(gl_compTabs);
 		GridData gd_compTabs = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
+		gd_compTabs.widthHint = widthCompAlg;
+		tabsHost.setLayoutData(gd_compTabs);
+		
+		compTabs = new Composite(tabsHost, SWT.NONE);
+		gl_compTabs = new GridLayout(1, false);
+		gl_compTabs.marginWidth = 0;
+		gl_compTabs.marginHeight = 0;
+		gl_compTabs.horizontalSpacing = 0;
+		gl_compTabs.verticalSpacing = 1;
+		compTabs.setLayout(gl_compTabs);
+		gd_compTabs = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
 		gd_compTabs.widthHint = widthCompAlg;
 		compTabs.setLayoutData(gd_compTabs);
 		
+		compTabsLinks = new Composite(tabsHost, SWT.NONE);
+		gl_compTabs = new GridLayout(1, false);
+		gl_compTabs.marginWidth = 0;
+		gl_compTabs.marginHeight = 0;
+		gl_compTabs.horizontalSpacing = 0;
+		gl_compTabs.verticalSpacing = 0;
+		compTabsLinks.setLayout(gl_compTabs);
+		gd_compTabs = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
+		gd_compTabs.widthHint = widthCompAlg;
+		compTabsLinks.setLayoutData(gd_compTabs);
+				
 		container = new Composite(this, SWT.NONE);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		containerLayout = new StackLayout();
@@ -542,7 +572,6 @@ public class LateralTabFolder extends Composite {
 		gl_contents.marginWidth = 0;
 		contents.setLayout(gl_contents);
 		contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		contents.setBackground(getDisplay().getSystemColor(SWT.COLOR_GREEN));
 		
 		//Set parent
 		tabContent.setParent(contents);
@@ -592,4 +621,52 @@ public class LateralTabFolder extends Composite {
 	public void setTabSelectionListener(Listener l){
 		listener = l;
 	}
+	
+	/**
+	 * Adds a widget of the given type after the lateral tab entries  
+	 * <p>
+	 * This can be useful for adding custom functionality to this component e.g. a {@link Button} for adding more tab entries
+	 * </p>
+	 * 
+	 * @param type - the type of the widget to be created from {@link WIDGET_TYPES}
+	 * @param text - the text of the link
+	 * @param listener - a {@link SelectionListener} instance to be called when the link is clicked
+	 */
+	public void addLateralWidget(WIDGET_TYPES type, String text, SelectionListener listener){
+		
+		Composite tabBtn =  new Composite(compTabsLinks, SWT.NONE);
+		GridData gd_tabBtn = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		tabBtn.setLayoutData(gd_tabBtn);
+		tabBtn.setLayout(new GridLayout(1, false));
+		
+		//Create label for tab name
+		if(type == WIDGET_TYPES.BUTTON){
+			Button btn = new Button(tabBtn, SWT.NONE);
+			btn.setText(text);
+			btn.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false, 1, 1));
+			
+			if(listener != null){
+				btn.addSelectionListener(listener);			
+			}
+		}else{
+			Link link = new Link(tabBtn, SWT.NONE);
+			link.setText("<a>"+text+"</a>");
+			link.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false, 1, 1));
+			
+			if(listener != null){
+				link.addSelectionListener(listener);			
+			}
+		}
+
+		//Paint the right border
+		tabBtn.addPaintListener(new PaintListener() {
+			@Override
+			public void paintControl(PaintEvent e) {
+				 	GC gc=e.gc;
+				 	gc.setLineWidth(0);
+				 	gc.setForeground(colorLines);
+				 	gc.drawLine(widthCompAlg-1,0,widthCompAlg-1, tabBtn.getSize().y);			 		
+			}
+		});
+	}	
 }
