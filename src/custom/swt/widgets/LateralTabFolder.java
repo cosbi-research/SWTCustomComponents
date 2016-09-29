@@ -52,6 +52,7 @@ public class LateralTabFolder extends Composite {
 		BUTTON, LINK
 	}
 	
+	private Composite tabsHost;
 	private Composite compTabs;
 	private Composite compTabsLinks;
 	private Composite container;
@@ -140,7 +141,7 @@ public class LateralTabFolder extends Composite {
 		gl_composite.horizontalSpacing = 0;
 		this.setLayout(gl_composite);
 		
-		Composite tabsHost = new Composite(this, SWT.NONE);
+		tabsHost = new Composite(this, SWT.NONE);
 		GridLayout gl_compTabs = new GridLayout(1, false);
 		gl_compTabs.marginWidth = 0;
 		gl_compTabs.marginHeight = 0;
@@ -158,7 +159,7 @@ public class LateralTabFolder extends Composite {
 		gl_compTabs.horizontalSpacing = 0;
 		gl_compTabs.verticalSpacing = 1;
 		compTabs.setLayout(gl_compTabs);
-		gd_compTabs = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
+		gd_compTabs = new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1);
 		gd_compTabs.widthHint = widthCompAlg;
 		compTabs.setLayoutData(gd_compTabs);
 		
@@ -169,7 +170,7 @@ public class LateralTabFolder extends Composite {
 		gl_compTabs.horizontalSpacing = 0;
 		gl_compTabs.verticalSpacing = 0;
 		compTabsLinks.setLayout(gl_compTabs);
-		gd_compTabs = new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1);
+		gd_compTabs = new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1);
 		gd_compTabs.widthHint = widthCompAlg;
 		compTabsLinks.setLayoutData(gd_compTabs);
 				
@@ -277,11 +278,11 @@ public class LateralTabFolder extends Composite {
 					GC gc=e.gc;
 				 	gc.setLineWidth(0);
 				 	gc.setForeground(colorLines);
-				 	gc.drawLine(widthCompAlg-1, -2, widthCompAlg-1, compTabs.getSize().y);
+				 	gc.drawLine(widthCompAlg-1, -2, widthCompAlg-1, tabsHost.getSize().y);
 			}
 		};
 		
-		compTabs.addPaintListener(paintLinesCompTabs);
+		tabsHost.addPaintListener(paintLinesCompTabs);
 	}
 	
 	/**
