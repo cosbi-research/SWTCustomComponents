@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 /**
  * The PopupLink class represents an interactive user interface object that has the look of link,
@@ -73,11 +75,12 @@ public class PopupLink extends Composite {
 		
 		selItemIndex = 0;
 		
+		setLayout(new GridLayout(1, true));
+		//setLayout(new OurLayout());
+
 		link = new Link(this, SWT.NONE);
 		link.setCursor(new Cursor(getDisplay(), SWT.CURSOR_HAND));
-		
-		setLayout(new OurLayout());
-		
+		link.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		installListeners();
 	}
 	
