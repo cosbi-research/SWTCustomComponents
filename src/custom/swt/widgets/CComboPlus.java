@@ -10,6 +10,8 @@
  *******************************************************************************/
 package custom.swt.widgets;
 
+import java.util.ArrayList;
+
 /*
  * This class file is modified version of the org.eclipse.swt.custom.CCombo class by Petros Moyseos
  * 
@@ -20,6 +22,7 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
+
 import org.eclipse.swt.accessibility.*;
 
 /**
@@ -67,6 +70,8 @@ public class CComboPlus extends Composite {
 	Color foreground, background;
 	Font font;
 	Shell _shell;
+	java.util.List<PopupOptionVisibleListener> optionVisibleListeners = new ArrayList<PopupOptionVisibleListener>();
+
 	
 	static final String PACKAGE_PREFIX = "custom.swt.widgets."; //$NON-NLS-1$
 
@@ -566,6 +571,7 @@ void dropDown (boolean drop) {
 		if (!isDisposed () && isFocusControl()) {
 			text.setFocus();
 		}
+		optionVisibleListeners.forEach(l->l.onListHidden());
 		return;
 	}
 	if (!isVisible()) return;
@@ -1970,5 +1976,11 @@ public void setTextForeground(Color color){
 	text.setForeground(color);
 }
 
+public void addPopupVisibleListListener(PopupOptionVisibleListener dispose){
+	this.optionVisibleListeners.add(dispose);
+}
 
+public static abstract class PopupOptionVisibleListener{
+	public abstract void onListHidden();
+}
 }

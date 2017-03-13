@@ -1,5 +1,8 @@
 package custom.swt.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.DisposeEvent;
@@ -14,6 +17,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
+
+
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 
@@ -46,6 +51,7 @@ public class PopupLink extends Composite {
 	private int selItemIndex;
 	private String connection;
 	private IPopupLinkInputValidator[] validators;
+	private List<ChangeSelectionLister> changeSelectionListeners = new ArrayList<>();
 	
 	/**
 	 * Constructs a new instance of this class given its parent
@@ -194,6 +200,7 @@ public class PopupLink extends Composite {
 		link.setText("<a>"+linkText+"</a>");
 		super.getParent().layout();
 		
+		changeSelectionListeners.forEach(l->l.onChangeSelection());
 		//super.setFocus(); // In order to hide the dotted border
 	}
 	
@@ -297,5 +304,13 @@ public class PopupLink extends Composite {
 			
 			children[0].setBounds(1, 1, tExtent.x, tExtent.y);
 		}
+	}
+	
+	public void addChangeSelectionListener(ChangeSelectionLister listener){
+		this.changeSelectionListeners.add(listener);
+	}
+	
+	public static abstract class ChangeSelectionLister{
+		public abstract void onChangeSelection();
 	}
 }

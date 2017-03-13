@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolTip;
+import custom.swt.widgets.CComboPlus;
+import custom.swt.widgets.CComboPlus.PopupOptionVisibleListener;
 
 public class PopupControlAdapter {
 	
@@ -499,6 +501,13 @@ public class PopupControlAdapter {
 						if (event.detail == SWT.TRAVERSE_RETURN) {
 							close();
 						}
+					}
+				});
+				
+				comboCtrl.addPopupVisibleListListener(new PopupOptionVisibleListener() {
+					@Override
+					public void onListHidden() {
+						close();
 					}
 				});
 
