@@ -6,41 +6,23 @@
 		
 	<property name="bin.dir" value="bin" />
     <property name="dist.dir" value="dist" />
+	<property name="lib.dir" value="lib" />
 	<property name="src.dir" value="src" />
     <property name="jar.name" value="swtcustomcomponents.jar"/>
-
-	<!-- ===================== Property Definitions =========================== -->
-		
-	<!-- =================================================================================
-		           EDIT THESE OPTIONS
-	    ================================================================================== -->
-		
-		<!-- The path to the folder where Eclipse is installed should be set-->
-		
-		<!-- <property name="eclipse.home" value="C:\Eclipse" /> -->
-	    
-    <!-- =================================================================================
-               / EDIT THESE OPTIONS
-    ================================================================================== -->
 	
-	<!-- Libraries on which the project depends -->
+	<!-- Jar files required for compiling the project -->
 	<path id="classpath.base">  
-		<fileset file="${eclipse.home}/plugins/org.eclipse.core.commands_*.jar"/>
-		<fileset file="${eclipse.home}/plugins/org.eclipse.equinox.common_*.jar"/>
-		<fileset file="${eclipse.home}/plugins/org.eclipse.jface_*.jar"/>
+		<!-- =================================================================================
+		           EDIT to include and/or exclude speficic jars
+	    ================================================================================== -->
+		<fileset dir="${lib.dir}">
+			<!-- EDIT: Modify to include or exclude specific jars -->
+			<include name="**/*.jar"/>
+		</fileset>
 	</path> 
 	
-	<!-- ===================== Tasks =========================== -->
-	
-	<target name="CheckClasspath">
-		<condition property="eclipse.home.set">
-			<isset property="eclipse.home" />
-		</condition>
-				
-		<fail unless="eclipse.home.set" message="Please, set the [eclipse.home] property" />
-	</target>
-	
-	<target name="Clean" depends="CheckClasspath">
+	<!-- ===================== Tasks =========================== -->	
+	<target name="Clean">
 		<delete dir="${bin.dir}" />
 		<delete dir="${dist.dir}" />
 	</target>
