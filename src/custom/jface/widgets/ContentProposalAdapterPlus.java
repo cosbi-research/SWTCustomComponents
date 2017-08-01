@@ -20,6 +20,19 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.dialogs.PopupDialog;
+import org.eclipse.jface.fieldassist.IContentProposal;
+import org.eclipse.jface.fieldassist.IContentProposalListener;
+import org.eclipse.jface.fieldassist.IContentProposalListener2;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
+import org.eclipse.jface.fieldassist.IControlContentAdapter;
+import org.eclipse.jface.fieldassist.IControlContentAdapter2;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.util.Util;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -45,18 +58,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.jface.bindings.keys.KeyStroke;
-import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.jface.fieldassist.IContentProposal;
-import org.eclipse.jface.fieldassist.IContentProposalListener;
-import org.eclipse.jface.fieldassist.IContentProposalListener2;
-import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.jface.fieldassist.IControlContentAdapter;
-import org.eclipse.jface.fieldassist.IControlContentAdapter2;
-import org.eclipse.jface.preference.JFacePreferences;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.util.Util;
-import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
  * ContentProposalAdapterPlus is based on
@@ -131,8 +132,7 @@ public class ContentProposalAdapterPlus {
 								// Check the active shell.
 								Shell activeShell = e.display.getActiveShell();
 								if (activeShell == getShell()
-										|| (infoPopup != null && infoPopup
-												.getShell() == activeShell)) {
+										|| (infoPopup != null && infoPopup.getShell() == activeShell)) {
 									return;
 								}
 								/*
@@ -252,8 +252,7 @@ public class ContentProposalAdapterPlus {
 
 				if (key == 0) {
 					int newSelection = proposalTable.getSelectionIndex();
-					int visibleRows = (proposalTable.getSize().y / proposalTable
-							.getItemHeight()) - 1;
+					int visibleRows = (proposalTable.getSize().y / proposalTable.getItemHeight()) - 1;
 					switch (e.keyCode) {
 					case SWT.ARROW_UP:
 						newSelection -= 1;
@@ -331,8 +330,7 @@ public class ContentProposalAdapterPlus {
 							e.doit = false;
 						} else {
 							e.doit = true;
-							String contents = getControlContentAdapter()
-									.getControlContents(getControl());
+							String contents = getControlContentAdapter().getControlContents(getControl());
 							// If there are no contents, changes in cursor
 							// position have no effect. Note also that we do
 							// not affect the filter text on ARROW_LEFT as
@@ -347,12 +345,8 @@ public class ContentProposalAdapterPlus {
 					// Modifier keys are explicitly checked and ignored because
 					// they are not complete yet (no character).
 					default:
-						if (e.keyCode != SWT.CAPS_LOCK
-								&& e.keyCode != SWT.NUM_LOCK
-								&& e.keyCode != SWT.MOD1
-								&& e.keyCode != SWT.MOD2
-								&& e.keyCode != SWT.MOD3
-								&& e.keyCode != SWT.MOD4) {
+						if (e.keyCode != SWT.CAPS_LOCK && e.keyCode != SWT.NUM_LOCK && e.keyCode != SWT.MOD1
+								&& e.keyCode != SWT.MOD2 && e.keyCode != SWT.MOD3 && e.keyCode != SWT.MOD4) {
 							close();
 						}
 						return;
@@ -399,8 +393,7 @@ public class ContentProposalAdapterPlus {
 							return;
 						}
 						// There is filter to back out of
-						filterText = filterText.substring(0,
-								filterText.length() - 1);
+						filterText = filterText.substring(0, filterText.length() - 1);
 						asyncRecomputeProposals(filterText);
 						return;
 					}
@@ -408,8 +401,7 @@ public class ContentProposalAdapterPlus {
 					// clients provide their own filtering based on content.
 					// Recompute the proposals if the cursor position
 					// will change (is not at 0).
-					int pos = getControlContentAdapter().getCursorPosition(
-							getControl());
+					int pos = getControlContentAdapter().getCursorPosition(getControl());
 					// We rely on the fact that the contents and pos do not yet
 					// reflect the result of the BS. If the contents were
 					// already empty, then BS should not cause
@@ -456,20 +448,17 @@ public class ContentProposalAdapterPlus {
 			 * Construct an info-popup with the specified parent.
 			 */
 			InfoPopupDialog(Shell parent) {
-				super(parent, PopupDialog.HOVER_SHELLSTYLE, false, false,
-						false, false, false, null, null);
+				super(parent, PopupDialog.HOVER_SHELLSTYLE, false, false, false, false, false, null, null);
 			}
 
 			/*
 			 * Create a text control for showing the info about a proposal.
 			 */
 			protected Control createDialogArea(Composite parent) {
-				text = new Text(parent, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP
-						| SWT.NO_FOCUS);
+				text = new Text(parent, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.NO_FOCUS);
 
 				// Use the compact margins employed by PopupDialog.
-				GridData gd = new GridData(GridData.BEGINNING
-						| GridData.FILL_BOTH);
+				GridData gd = new GridData(GridData.BEGINNING | GridData.FILL_BOTH);
 				gd.horizontalIndent = PopupDialog.POPUP_HORIZONTALSPACING;
 				gd.verticalIndent = PopupDialog.POPUP_VERTICALSPACING;
 				text.setLayoutData(gd);
@@ -491,32 +480,25 @@ public class ContentProposalAdapterPlus {
 				Rectangle parentBounds = getParentShell().getBounds();
 				Rectangle proposedBounds;
 				// Try placing the info popup to the right
-				Rectangle rightProposedBounds = new Rectangle(parentBounds.x
-						+ parentBounds.width
-						+ PopupDialog.POPUP_HORIZONTALSPACING, parentBounds.y
-						+ PopupDialog.POPUP_VERTICALSPACING,
-						parentBounds.width, parentBounds.height);
+				Rectangle rightProposedBounds = new Rectangle(
+						parentBounds.x + parentBounds.width + PopupDialog.POPUP_HORIZONTALSPACING,
+						parentBounds.y + PopupDialog.POPUP_VERTICALSPACING, parentBounds.width, parentBounds.height);
 				rightProposedBounds = getConstrainedShellBounds(rightProposedBounds);
 				// If it won't fit on the right, try the left
 				if (rightProposedBounds.intersects(parentBounds)) {
-					Rectangle leftProposedBounds = new Rectangle(parentBounds.x
-							- parentBounds.width - POPUP_HORIZONTALSPACING - 1,
-							parentBounds.y, parentBounds.width,
-							parentBounds.height);
+					Rectangle leftProposedBounds = new Rectangle(
+							parentBounds.x - parentBounds.width - POPUP_HORIZONTALSPACING - 1, parentBounds.y,
+							parentBounds.width, parentBounds.height);
 					leftProposedBounds = getConstrainedShellBounds(leftProposedBounds);
 					// If it won't fit on the left, choose the proposed bounds
 					// that fits the best
 					if (leftProposedBounds.intersects(parentBounds)) {
-						if (rightProposedBounds.x - parentBounds.x >= parentBounds.x
-								- leftProposedBounds.x) {
-							rightProposedBounds.x = parentBounds.x
-									+ parentBounds.width
+						if (rightProposedBounds.x - parentBounds.x >= parentBounds.x - leftProposedBounds.x) {
+							rightProposedBounds.x = parentBounds.x + parentBounds.width
 									+ PopupDialog.POPUP_HORIZONTALSPACING;
 							proposedBounds = rightProposedBounds;
 						} else {
-							leftProposedBounds.width = parentBounds.x
-									- POPUP_HORIZONTALSPACING
-									- leftProposedBounds.x;
+							leftProposedBounds.width = parentBounds.x - POPUP_HORIZONTALSPACING - leftProposedBounds.x;
 							proposedBounds = leftProposedBounds;
 						}
 					} else {
@@ -536,8 +518,7 @@ public class ContentProposalAdapterPlus {
 			 * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
 			 */
 			protected Color getForeground() {
-				return control.getDisplay().getSystemColor(
-						SWT.COLOR_INFO_FOREGROUND);
+				return control.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND);
 			}
 
 			/*
@@ -546,8 +527,7 @@ public class ContentProposalAdapterPlus {
 			 * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
 			 */
 			protected Color getBackground() {
-				return control.getDisplay().getSystemColor(
-						SWT.COLOR_INFO_BACKGROUND);
+				return control.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND);
 			}
 
 			/*
@@ -570,8 +550,7 @@ public class ContentProposalAdapterPlus {
 				if (text == null || text.isDisposed()) {
 					return false;
 				}
-				return text.getShell().isFocusControl()
-						|| text.isFocusControl();
+				return text.getShell().isFocusControl() || text.isFocusControl();
 			}
 		}
 
@@ -629,8 +608,7 @@ public class ContentProposalAdapterPlus {
 			// On platforms where SWT.ON_TOP overrides SWT.RESIZE, we will live
 			// with this.
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=126138
-			super(control.getShell(), SWT.RESIZE | SWT.ON_TOP, false, false,
-					false, false, false, null, infoText);
+			super(control.getShell(), SWT.RESIZE | SWT.ON_TOP, false, false, false, false, false, null, infoText);
 			this.proposals = proposals;
 		}
 
@@ -644,8 +622,7 @@ public class ContentProposalAdapterPlus {
 			if (tableProvider != null && tableProvider.getForeground() != null)
 				return tableProvider.getForeground();
 
-			return JFaceResources.getColorRegistry().get(
-					JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
+			return JFaceResources.getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
 		}
 
 		/*
@@ -658,8 +635,7 @@ public class ContentProposalAdapterPlus {
 			if (tableProvider != null && tableProvider.getBackground() != null)
 				return tableProvider.getBackground();
 
-			return JFaceResources.getColorRegistry().get(
-					JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
+			return JFaceResources.getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
 		}
 
 		/*
@@ -678,8 +654,7 @@ public class ContentProposalAdapterPlus {
 					proposalTable = tableProvider.getProposalsTable(parent,
 							SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL | SWT.SINGLE);
 				else
-					proposalTable = new Table(parent, SWT.H_SCROLL
-							| SWT.V_SCROLL | SWT.VIRTUAL);
+					proposalTable = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
 
 				Listener listener = new Listener() {
 					public void handleEvent(Event event) {
@@ -689,11 +664,9 @@ public class ContentProposalAdapterPlus {
 				proposalTable.addListener(SWT.SetData, listener);
 			} else {
 				if (tableProvider != null)
-					proposalTable = tableProvider.getProposalsTable(parent,
-							SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
+					proposalTable = tableProvider.getProposalsTable(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
 				else
-					proposalTable = new Table(parent, SWT.H_SCROLL
-							| SWT.V_SCROLL);
+					proposalTable = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 			}
 
 			// set the proposals to force population of the table.
@@ -713,8 +686,7 @@ public class ContentProposalAdapterPlus {
 							return;
 
 						if (proposalTable.equals(e.getSource())) {
-							Object o = proposalTable
-									.getItem(new Point(e.x, e.y));
+							Object o = proposalTable.getItem(new Point(e.x, e.y));
 							TableItem selection = proposalTable.getSelection()[0];
 							if (selection.equals(o))
 								acceptCurrentProposal();
@@ -744,12 +716,12 @@ public class ContentProposalAdapterPlus {
 			});
 			return proposalTable;
 		}
-		
+
 		/**
 		 * Re-sizes proposal table to fit the resized popup.
 		 * <p>
-		 * NOTE: This method is called only when the table for the proposals derives 
-		 * from a {@link IProposalTableProvider} instance
+		 * NOTE: This method is called only when the table for the proposals
+		 * derives from a {@link IProposalTableProvider} instance
 		 * <p>
 		 */
 		private void resizeProposalsTable() {
@@ -767,9 +739,7 @@ public class ContentProposalAdapterPlus {
 			Point size = proposalTable.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			ScrollBar vBar = proposalTable.getVerticalBar();
 
-			int width = area.width
-					- proposalTable.computeTrim(0, 0, 0, 0).width
-					+ vBar.getSize().x;
+			int width = area.width - proposalTable.computeTrim(0, 0, 0, 0).width + vBar.getSize().x;
 
 			// FIXME: it does not always work precisely
 			// Check it with other OSs and styles
@@ -805,36 +775,31 @@ public class ContentProposalAdapterPlus {
 		 */
 		protected void adjustBounds() {
 			// Get our control's location in display coordinates.
-			Point location = control.getDisplay().map(control.getParent(),
-					null, control.getLocation());
+			Point location = control.getDisplay().map(control.getParent(), null, control.getLocation());
 			int initialX = location.x + POPUP_OFFSET;
 			int initialY = location.y + control.getSize().y + POPUP_OFFSET;
 			// If we are inserting content, use the cursor position to
 			// position the control.
 			if (getProposalAcceptanceStyle() == PROPOSAL_INSERT) {
-				Rectangle insertionBounds = controlContentAdapter
-						.getInsertionBounds(control);
+				Rectangle insertionBounds = controlContentAdapter.getInsertionBounds(control);
 				initialX = initialX + insertionBounds.x;
-				initialY = location.y + insertionBounds.y
-						+ insertionBounds.height;
+				initialY = location.y + insertionBounds.y + insertionBounds.height;
 			}
 
 			// If there is no specified size, force it by setting
 			// up a layout on the table.
 			if (popupSize == null) {
 				GridData data = new GridData(GridData.FILL_BOTH);
-				data.heightHint = proposalTable.getItemHeight()
-						* POPUP_CHAR_HEIGHT;
-				data.widthHint = Math.max(control.getSize().x,
-						POPUP_MINIMUM_WIDTH);
+				data.heightHint = proposalTable.getItemHeight() * POPUP_CHAR_HEIGHT;
+				data.widthHint = Math.max(control.getSize().x, POPUP_MINIMUM_WIDTH);
 				proposalTable.setLayoutData(data);
 				getShell().pack();
 				popupSize = getShell().getSize();
 			}
 
 			// Constrain to the display
-			Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(
-					initialX, initialY, popupSize.x, popupSize.y));
+			Rectangle constrainedBounds = getConstrainedShellBounds(
+					new Rectangle(initialX, initialY, popupSize.x, popupSize.y));
 
 			int offset = 0;
 
@@ -847,11 +812,9 @@ public class ContentProposalAdapterPlus {
 			// If there has been an adjustment causing the popup to overlap
 			// with the control, then put the popup above the control.
 			if (constrainedBounds.y < initialY)
-				getShell().setBounds(initialX, location.y - popupSize.y,
-						popupSize.x, popupSize.y);
+				getShell().setBounds(initialX, location.y - popupSize.y, popupSize.x, popupSize.y);
 			else
-				getShell().setBounds(initialX - offset, initialY, popupSize.x,
-						popupSize.y);
+				getShell().setBounds(initialX - offset, initialY, popupSize.x, popupSize.y);
 
 			if (tableProvider != null)
 				resizeProposalsTable();
@@ -943,8 +906,7 @@ public class ContentProposalAdapterPlus {
 				return EMPTY;
 			}
 			if (labelProvider == null) {
-				return proposal.getLabel() == null ? proposal.getContent()
-						: proposal.getLabel();
+				return proposal.getLabel() == null ? proposal.getContent() : proposal.getLabel();
 			}
 			return labelProvider.getText(proposal);
 		}
@@ -1091,21 +1053,15 @@ public class ContentProposalAdapterPlus {
 									String description = p.getDescription();
 									if (description != null) {
 										if (infoPopup == null) {
-											infoPopup = new InfoPopupDialog(
-													getShell());
+											infoPopup = new InfoPopupDialog(getShell());
 											infoPopup.open();
-											infoPopup
-													.getShell()
-													.addDisposeListener(
-															new DisposeListener() {
-																public void widgetDisposed(
-																		DisposeEvent event) {
-																	infoPopup = null;
-																}
-															});
+											infoPopup.getShell().addDisposeListener(new DisposeListener() {
+												public void widgetDisposed(DisposeEvent event) {
+													infoPopup = null;
+												}
+											});
 										}
-										infoPopup.setContents(p
-												.getDescription());
+										infoPopup.setContents(p.getDescription());
 									} else if (infoPopup != null) {
 										infoPopup.close();
 									}
@@ -1177,8 +1133,7 @@ public class ContentProposalAdapterPlus {
 		 * Filter the provided list of content proposals according to the filter
 		 * text.
 		 */
-		private IContentProposal[] filterProposals(
-				IContentProposal[] proposals, String filterString) {
+		private IContentProposal[] filterProposals(IContentProposal[] proposals, String filterString) {
 			if (filterString.length() == 0) {
 				return proposals;
 			}
@@ -1189,14 +1144,12 @@ public class ContentProposalAdapterPlus {
 			for (int i = 0; i < proposals.length; i++) {
 				String string = getString(proposals[i]);
 				if (string.length() >= filterString.length()
-						&& string.substring(0, filterString.length())
-								.equalsIgnoreCase(filterString)) {
+						&& string.substring(0, filterString.length()).equalsIgnoreCase(filterString)) {
 					list.add(proposals[i]);
 				}
 
 			}
-			return (IContentProposal[]) list.toArray(new IContentProposal[list
-					.size()]);
+			return (IContentProposal[]) list.toArray(new IContentProposal[list.size()]);
 		}
 
 		Listener getTargetControlListener() {
@@ -1233,12 +1186,14 @@ public class ContentProposalAdapterPlus {
 	public static final int PROPOSAL_IGNORE = 3;
 
 	/**
-	 * Indicates that the proposals popup should be displayed on the left of the control
+	 * Indicates that the proposals popup should be displayed on the left of the
+	 * control
 	 */
 	public static final int POPUP_LEFT = 1;
-	
+
 	/**
-	 * Indicates that the proposals popup should be displayed on the right of the control
+	 * Indicates that the proposals popup should be displayed on the right of
+	 * the control
 	 */
 	public static final int POPUP_RIGHT = 2;
 
@@ -1417,14 +1372,15 @@ public class ContentProposalAdapterPlus {
 	 * A flag that indicates that we are watching modify events
 	 */
 	private boolean watchModify = false;
-	
+
 	/*
 	 * The location of the proposals popup in respect to the text control
 	 */
 	private int popupLocation = POPUP_RIGHT;
-	
+
 	/*
-	 * A flag that indicates that a single click selection on the proposals is enabled (default is double-click)
+	 * A flag that indicates that a single click selection on the proposals is
+	 * enabled (default is double-click)
 	 */
 	private boolean singleClickSelection = false;
 
@@ -1459,10 +1415,8 @@ public class ContentProposalAdapterPlus {
 	 *            <code>null</code>, then all alphanumeric characters will
 	 *            auto-activate content proposal.
 	 */
-	public ContentProposalAdapterPlus(Control control,
-			IControlContentAdapter controlContentAdapter,
-			IContentProposalProvider proposalProvider, KeyStroke keyStroke,
-			char[] autoActivationCharacters) {
+	public ContentProposalAdapterPlus(Control control, IControlContentAdapter controlContentAdapter,
+			IContentProposalProvider proposalProvider, KeyStroke keyStroke, char[] autoActivationCharacters) {
 		// We always assume the control and content adapter are valid.
 		Assert.isNotNull(control);
 		Assert.isNotNull(controlContentAdapter);
@@ -1537,30 +1491,29 @@ public class ContentProposalAdapterPlus {
 	 * @param proposalProvider
 	 *            the {@link IContentProposalProvider} used to show proposals
 	 */
-	public void setContentProposalProvider(
-			IContentProposalProvider proposalProvider) {
+	public void setContentProposalProvider(IContentProposalProvider proposalProvider) {
 		this.proposalProvider = proposalProvider;
 	}
 
-	
 	/**
-	 * Return the proposal provider that provides the table in which the 
+	 * Return the proposal provider that provides the table in which the
 	 * proposals are displayed. A value of <code>null</code> indicates that
 	 * there are no content table provider was defined
 	 * 
-	 * @return the {@link IProposalTableProvider} instance. May
-	 *         be <code>null</code>.
+	 * @return the {@link IProposalTableProvider} instance. May be
+	 *         <code>null</code>.
 	 * 
 	 */
 	public IProposalTableProvider getProposalTableProvider() {
 		return this.tableProvider;
 	}
-	
+
 	/**
-	 * Set the content table provider that is used for providing the table in which to show proposals.
+	 * Set the content table provider that is used for providing the table in
+	 * which to show proposals.
 	 * 
 	 * @param tableProvider
-	 * 			the {@link IProposalTableProvider} instance
+	 *            the {@link IProposalTableProvider} instance
 	 */
 	public void setProposalTableProvider(IProposalTableProvider tableProvider) {
 		this.tableProvider = tableProvider;
@@ -1791,7 +1744,8 @@ public class ContentProposalAdapterPlus {
 
 	/**
 	 * Add the specified listener to the list of content proposal listeners that
-	 * are notified when content proposals are chosen. </p>
+	 * are notified when content proposals are chosen.
+	 * </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener to be added as a listener. Must
@@ -1807,7 +1761,8 @@ public class ContentProposalAdapterPlus {
 
 	/**
 	 * Removes the specified listener from the list of content proposal
-	 * listeners that are notified when content proposals are chosen. </p>
+	 * listeners that are notified when content proposals are chosen.
+	 * </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener to be removed as a listener. Must
@@ -1823,7 +1778,8 @@ public class ContentProposalAdapterPlus {
 
 	/**
 	 * Add the specified listener to the list of content proposal listeners that
-	 * are notified when a content proposal popup is opened or closed. </p>
+	 * are notified when a content proposal popup is opened or closed.
+	 * </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener2 to be added as a listener. Must
@@ -1840,7 +1796,8 @@ public class ContentProposalAdapterPlus {
 
 	/**
 	 * Remove the specified listener from the list of content proposal listeners
-	 * that are notified when a content proposal popup is opened or closed. </p>
+	 * that are notified when a content proposal popup is opened or closed.
+	 * </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener2 to be removed as a listener.
@@ -1860,8 +1817,7 @@ public class ContentProposalAdapterPlus {
 	 */
 	private void addControlListener(Control control) {
 		if (DEBUG) {
-			System.out
-					.println("ContentProposalListener#installControlListener()"); //$NON-NLS-1$
+			System.out.println("ContentProposalListener#installControlListener()"); //$NON-NLS-1$
 		}
 
 		if (controlListener != null) {
@@ -1921,12 +1877,12 @@ public class ContentProposalAdapterPlus {
 					if (triggerKeyStroke != null) {
 						// Either there are no modifiers for the trigger and we
 						// check the character field...
-						if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke
-								.getNaturalKey() == e.character) ||
+						if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY
+								&& triggerKeyStroke.getNaturalKey() == e.character) ||
 						// ...or there are modifiers, in which case the
 						// keycode and state must match
-								(triggerKeyStroke.getNaturalKey() == e.keyCode && ((triggerKeyStroke
-										.getModifierKeys() & e.stateMask) == triggerKeyStroke
+						(triggerKeyStroke.getNaturalKey() == e.keyCode
+								&& ((triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
 										.getModifierKeys()))) {
 							// We never propagate the keystroke for an explicit
 							// keystroke invocation of the popup
@@ -1980,8 +1936,7 @@ public class ContentProposalAdapterPlus {
 				// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=183650
 				case SWT.Modify:
 				case SWT.MouseUp:
-					if (allowsAutoActivate()
-							&& (watchModify || e.type == SWT.MouseUp)) {
+					if (allowsAutoActivate() && (watchModify || e.type == SWT.MouseUp)) {
 						if (DEBUG) {
 							dump("Modify event triggers popup open or close", e); //$NON-NLS-1$
 						}
@@ -2034,8 +1989,7 @@ public class ContentProposalAdapterPlus {
 			 *            the event
 			 */
 			private void dump(String who, Event e) {
-				StringBuffer sb = new StringBuffer(
-						"--- [ContentProposalAdapter]\n"); //$NON-NLS-1$
+				StringBuffer sb = new StringBuffer("--- [ContentProposalAdapter]\n"); //$NON-NLS-1$
 				sb.append(who);
 				sb.append(" - e: keyCode=" + e.keyCode + hex(e.keyCode)); //$NON-NLS-1$
 				sb.append("; character=" + e.character + hex(e.character)); //$NON-NLS-1$
@@ -2056,8 +2010,7 @@ public class ContentProposalAdapterPlus {
 		control.addListener(SWT.MouseUp, controlListener);
 
 		if (DEBUG) {
-			System.out
-					.println("ContentProposalAdapter#installControlListener() - installed"); //$NON-NLS-1$
+			System.out.println("ContentProposalAdapter#installControlListener() - installed"); //$NON-NLS-1$
 		}
 	}
 
@@ -2132,12 +2085,10 @@ public class ContentProposalAdapterPlus {
 	private void proposalAccepted(IContentProposal proposal) {
 		switch (proposalAcceptanceStyle) {
 		case (PROPOSAL_REPLACE):
-			setControlContent(proposal.getContent(),
-					proposal.getCursorPosition());
+			setControlContent(proposal.getContent(), proposal.getCursorPosition());
 			break;
 		case (PROPOSAL_INSERT):
-			insertControlContent(proposal.getContent(),
-					proposal.getCursorPosition());
+			insertControlContent(proposal.getContent(), proposal.getCursorPosition());
 			break;
 		default:
 			// do nothing. Typically a listener is installed to handle this in
@@ -2157,8 +2108,7 @@ public class ContentProposalAdapterPlus {
 		if (isValid()) {
 			// should already be false, but just in case.
 			watchModify = false;
-			controlContentAdapter.setControlContents(control, text,
-					cursorPosition);
+			controlContentAdapter.setControlContents(control, text, cursorPosition);
 		}
 	}
 
@@ -2175,15 +2125,12 @@ public class ContentProposalAdapterPlus {
 			// the popup opened.
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=127108
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=139063
-			if (controlContentAdapter instanceof IControlContentAdapter2
-					&& selectionRange.x != -1) {
-				((IControlContentAdapter2) controlContentAdapter).setSelection(
-						control, selectionRange);
+			if (controlContentAdapter instanceof IControlContentAdapter2 && selectionRange.x != -1) {
+				((IControlContentAdapter2) controlContentAdapter).setSelection(control, selectionRange);
 			} else if (insertionPos != -1) {
 				controlContentAdapter.setCursorPosition(control, insertionPos);
 			}
-			controlContentAdapter.insertControlContents(control, text,
-					cursorPosition);
+			controlContentAdapter.insertControlContents(control, text, cursorPosition);
 		}
 	}
 
@@ -2191,8 +2138,7 @@ public class ContentProposalAdapterPlus {
 	 * Check that the control and content adapter are valid.
 	 */
 	private boolean isValid() {
-		return control != null && !control.isDisposed()
-				&& controlContentAdapter != null;
+		return control != null && !control.isDisposed() && controlContentAdapter != null;
 	}
 
 	/*
@@ -2204,8 +2150,7 @@ public class ContentProposalAdapterPlus {
 			insertionPos = adapter.getCursorPosition(control);
 			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=139063
 			if (adapter instanceof IControlContentAdapter2) {
-				selectionRange = ((IControlContentAdapter2) adapter)
-						.getSelection(control);
+				selectionRange = ((IControlContentAdapter2) adapter).getSelection(control);
 			}
 
 		}
@@ -2224,13 +2169,10 @@ public class ContentProposalAdapterPlus {
 		}
 		int position = insertionPos;
 		if (position == -1) {
-			position = getControlContentAdapter().getCursorPosition(
-					getControl());
+			position = getControlContentAdapter().getCursorPosition(getControl());
 		}
-		String contents = getControlContentAdapter().getControlContents(
-				getControl());
-		IContentProposal[] proposals = proposalProvider.getProposals(contents,
-				position);
+		String contents = getControlContentAdapter().getControlContents(getControl());
+		IContentProposal[] proposals = proposalProvider.getProposals(contents, position);
 		return proposals;
 	}
 
@@ -2270,7 +2212,7 @@ public class ContentProposalAdapterPlus {
 				public void run() {
 					if (isValid()) {
 						openProposalPopup(true);
-						if (tableProvider != null) {
+						if (tableProvider != null && popup != null) {
 							popup.resizeProposalsTable();
 						}
 					}
@@ -2288,8 +2230,7 @@ public class ContentProposalAdapterPlus {
 		}
 		final Object[] listenerArray = proposalListeners.getListeners();
 		for (int i = 0; i < listenerArray.length; i++) {
-			((IContentProposalListener) listenerArray[i])
-					.proposalAccepted(proposal);
+			((IContentProposalListener) listenerArray[i]).proposalAccepted(proposal);
 		}
 	}
 
@@ -2337,8 +2278,7 @@ public class ContentProposalAdapterPlus {
 	 * Return whether the control content is empty
 	 */
 	private boolean isControlContentEmpty() {
-		return getControlContentAdapter().getControlContents(getControl())
-				.length() == 0;
+		return getControlContentAdapter().getControlContents(getControl()).length() == 0;
 	}
 
 	/*
@@ -2364,8 +2304,7 @@ public class ContentProposalAdapterPlus {
 		// open
 		if (autoActivateString == null || autoActivateString.length() == 0)
 			return true;
-		String content = getControlContentAdapter().getControlContents(
-				getControl());
+		String content = getControlContentAdapter().getControlContents(getControl());
 		for (int i = 0; i < autoActivateString.length(); i++) {
 			if (content.indexOf(autoActivateString.charAt(i)) >= 0)
 				return true;
@@ -2415,21 +2354,24 @@ public class ContentProposalAdapterPlus {
 			return true;
 		return false;
 	}
-	
+
 	/**
-	 * Sets the location of the proposal popup in respect to the text control under
-	 * which it appears. Default location is {@link #POPUP_RIGHT}
+	 * Sets the location of the proposal popup in respect to the text control
+	 * under which it appears. Default location is {@link #POPUP_RIGHT}
 	 * 
-	 * @param location - {@link #POPUP_LEFT} or {@link #POPUP_RIGHT}
+	 * @param location
+	 *            - {@link #POPUP_LEFT} or {@link #POPUP_RIGHT}
 	 */
 	public void setPopupLocation(int location) {
 		popupLocation = location;
 	}
 
 	/**
-	 * Enables the single mouse click selection of proposals if argument is <code>true</code>
+	 * Enables the single mouse click selection of proposals if argument is
+	 * <code>true</code>
 	 * 
-	 * @param b - the new state of this feature
+	 * @param b
+	 *            - the new state of this feature
 	 */
 	public void setSingleClickSelection(boolean b) {
 		singleClickSelection = b;
