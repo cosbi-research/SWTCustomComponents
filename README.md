@@ -33,7 +33,17 @@ class with new methods for enabling the item selection on mouse hover _CComboPlu
 	interface for validating the user input upon edit.
 
 	This custom component can replace the traditional SWT text and/or combo dropdown controls in an input form, providing also the possibility to have one single widget for a pair of these controls.
-
 	
+- **custom.swt.widgets.FileUploader**
+	
+	Instances of this class are components that allow you to upload csv files, see the preview, upload an example file. Drag and drop can be supported. 
+	
+	The component is instantiated through its initialization. If no file has been uploaded, the component will show the message you specified in the constructor. You can drag a file into the empty component or click on the component to browse your file-system and upload your image.
+
+	Moreover, you can specify the number of rows to be shown in the file preview, via the method "setMaxNumberToDisplayAtFirst"
+
+- **custom.swt.widgets.InfoPopup**
+	
+	Instances of this class are components that display a text, without any button or shell border. As you click outside the component, it should disappear.
 	
 

@@ -5,9 +5,11 @@
 	<!-- ===================== Property Definitions =========================== -->
 		
 	<property name="bin.dir" value="bin" />
+	<property name="bin.res.dir" value="bin/resources" />
     <property name="dist.dir" value="dist" />
 	<property name="lib.dir" value="lib" />
 	<property name="src.dir" value="src" />
+	<property name="res.dir" value="resources" />
     <property name="jar.name" value="swtcustomcomponents.jar"/>
 	
 	<!-- Jar files required for compiling the project -->
@@ -25,17 +27,24 @@
 	<target name="Clean">
 		<delete dir="${bin.dir}" />
 		<delete dir="${dist.dir}" />
+		<delete dir="${bin.res.dir}" />
 	</target>
 	
 	<target name="Init" depends="Clean">
 		<mkdir dir="${bin.dir}" />
 		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${bin.res.dir}" />
 	</target>
 	
 	<target name="Compile" depends="Init">
 		<javac srcdir="${src.dir}" destdir="${bin.dir}" includes="**/*.java">
 			<classpath refid="classpath.base" />
 		</javac>
+		
+		<!-- Copy all the resources -->
+		<copy todir="${bin.res.dir}">
+		    <fileset dir="${res.dir}" excludes="**/*.java" />
+		</copy>
 	</target>
 	
 	<target name="CreateJAR" depends="Compile">
