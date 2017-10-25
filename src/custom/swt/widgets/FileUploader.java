@@ -316,8 +316,8 @@ public class FileUploader {
 		 ************** CANCEL ********************
 		 */
 		cancelUploadLink = new Link(generalComposite, SWT.NONE);
-		cancelUploadLink.setBounds(generalComposite.getBounds().x + generalComposite.getBounds().width - 50, 7, 50, 19);
-		cancelUploadLink.setText("<a>Cancel</a>");
+		cancelUploadLink.setBounds(generalComposite.getBounds().x + generalComposite.getBounds().width - 40, 7, 40, 19);
+		cancelUploadLink.setText("<a>Clear</a>");
 		cancelUploadLink.setToolTipText(emptyTooltip);
 		// make the cursor an end when the cursor is hover
 		cancelUploadLink.addMouseMoveListener(new MouseMoveListener() {
