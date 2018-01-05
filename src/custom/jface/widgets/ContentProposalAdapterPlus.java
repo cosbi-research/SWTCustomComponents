@@ -1117,6 +1117,12 @@ public class ContentProposalAdapterPlus {
 		 * to date with the event.
 		 */
 		private void asyncRecomputeProposals(final String filterText) {
+			if (System.getProperty("os.name").toLowerCase().indexOf("linux") >= 0)
+				// on linux-only keep closing/reopening because otherwise the
+				// dimension of the rows
+				// will be drammatically reduced
+				// FIXME
+				close();
 			if (isValid()) {
 				control.getDisplay().asyncExec(new Runnable() {
 					public void run() {
