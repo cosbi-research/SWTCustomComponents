@@ -25,7 +25,7 @@ public class MyCTabFolderRenderer extends CTabFolderRenderer {
 	Color borderColor; 
 	Color aliasColor; 
 
-	protected MyCTabFolderRenderer(CTabFolder parent) {
+	public MyCTabFolderRenderer(CTabFolder parent) {
 	    super(parent);
 	    this.parent = parent;
 	    Color borderColor = new Color(parent.getDisplay().getDefault(), 120, 120, 120);
