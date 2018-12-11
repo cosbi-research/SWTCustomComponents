@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 
 public class MyCTabFolderRenderer extends CTabFolderRenderer {
 
@@ -24,12 +25,14 @@ public class MyCTabFolderRenderer extends CTabFolderRenderer {
 
 	Color borderColor; 
 	Color aliasColor; 
+	Display display;
 
-	public MyCTabFolderRenderer(CTabFolder parent) {
+	public MyCTabFolderRenderer(Display display, CTabFolder parent) {
 	    super(parent);
 	    this.parent = parent;
-	    Color borderColor = new Color(parent.getDisplay().getDefault(), 120, 120, 120);
-		Color aliasColor = new Color(parent.getDisplay().getDefault(), 242, 242, 242);
+	    this.display=display;
+	    borderColor = new Color(display, 120, 120, 120);
+		aliasColor = new Color(display, 242, 242, 242);
 	    int d = parent.getTabHeight() - 12;
 	    curve = new int[] { 0, 0, 0, 1, 2, 1, 3, 2, 5, 2, 6, 3, 7, 3, 9, 5, 10, 5, 11, 6, 11 + d, 6 + d, 12 + d,
 		    7 + d, 13 + d, 7 + d, 15 + d, 9 + d, 16 + d, 9 + d, 17 + d, 10 + d, 19 + d, 10 + d, 20 + d, 11 + d,
