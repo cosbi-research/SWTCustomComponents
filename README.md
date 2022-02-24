@@ -1,5 +1,6 @@
 # SWTCustomComponents
 A collaborative effort to design and deliver modern and appealing SWT-based components.
+
 For any information or request you may want to get in touch with the [COSBI Bioinformatics lab](mailto:bioinformatics@cosbi.eu). We'll be happy to help!
 
 The project consists of the following components:
